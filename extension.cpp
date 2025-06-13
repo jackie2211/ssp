@@ -59,9 +59,13 @@ DETOUR_DECL_MEMBER1(ListenEvents, bool, CLC_ListenEvents*, msg)
 		if (msg->m_EventArray.Get(i))
 			count++;
 	
+	/*
 	g_hDetect->PushCell(client);
 	g_hDetect->PushCell(count);
 	g_hDetect->Execute(NULL);
+	*/
+	
+	smutils->LogMessage(myself, "[SSP_ext] Hook triggered for client %d with %d events", client, count);
 	
 	return DETOUR_MEMBER_CALL(ListenEvents)(msg);
 }
