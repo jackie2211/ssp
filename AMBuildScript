@@ -176,13 +176,15 @@ class ExtensionConfig(object):
       '-pipe',
       '-fno-strict-aliasing',
       '-Wall',
-      '-Werror',
+      #'-Werror',
       '-Wno-unused',
       '-Wno-switch',
       '-Wno-array-bounds',
       '-msse',
       '-m32',
       '-fvisibility=hidden',
+      '-DLINUX',
+      '-D_LINUX',
     ]
     cxx.cxxflags += [
       #'-std=c++11',
