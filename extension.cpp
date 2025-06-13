@@ -84,10 +84,10 @@ bool SSP::SDK_OnLoad(char *error, size_t maxlength, bool late)
 	}
 
 	g_DetourEvents->EnableDetour();
-
-	sharesys->RegisterLibrary(myself, "SSP_ext");
 	
 	g_hDetect = forwards->CreateForward("SSP_EChecker", ET_Ignore, 2, NULL, Param_Cell, Param_Cell);
+	
+	sharesys->RegisterLibrary(myself, "SSP_ext");
 	
 	return true;
 }
