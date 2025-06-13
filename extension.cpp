@@ -47,12 +47,12 @@ void *DetourAEvents = NULL;
 
 static void *engine = nullptr;
 
-DETOUR_DECL_MEMBER1(DetourEvents, bool, CLC_ListenEvents*, msg)
+DETOUR_DECL_MEMBER1(ListenEvents, bool, CLC_ListenEvents*, msg)
 {
 	int client = (reinterpret_cast<CBaseClient*>(this))->GetPlayerSlot() + 1;
 	IGamePlayer *pClient = playerhelpers->GetGamePlayer(client);
 	
-	if (pClient->IsFakeClient()) return DETOUR_MEMBER_CALL(DetourEvents)(msg);
+	if (pClient->IsFakeClient()) return DETOUR_MEMBER_CALL(ListenEvents)(msg);
 
 	int count = 0;
 
@@ -64,44 +64,27 @@ DETOUR_DECL_MEMBER1(DetourEvents, bool, CLC_ListenEvents*, msg)
 	g_hDetect->PushCell(count);
 	g_hDetect->Execute(NULL);
 	
-	return DETOUR_MEMBER_CALL(DetourEvents)(msg);
+	return DETOUR_MEMBER_CALL(ListenEvents)(msg);
 }
 
 bool SSP::SDK_OnLoad(char *error, size_t maxlength, bool late)
 {
-	CDetourManager::Init(smutils->GetScriptingEngine());
-	
-	Dl_info info;
-	
-	void *engine = dlopen(nullptr, RTLD_NOW);
-    if (!engine)
-    {
-        snprintf(error, maxlength, "dlopen(nullptr) failed");
-        return false;
-    }
-	
-	if (dladdr(engine, &info) == 0)
+	if (!gameconfs->LoadGameConfigFile("SSP.games", &pGameConfig, error, maxlen)) 
 	{
+		smutils->Format(error, maxlen - 1, "Failed to load gamedata");
 		return false;
 	}
 	
-	void *pEngineSo = dlopen(info.dli_fname, RTLD_NOW);
-	if (pEngineSo == NULL)
-	{
-		return false;
-	}
-	
-	DetourAEvents = memutils->ResolveSymbol(pEngineSo,	"_ZN11CBaseClient19ProcessListenEventsEP16CLC_ListenEvents");
-	if (!DetourAEvents)
-	{
-		dlclose(pEngineSo);
-		return false;
-	}
-	
-	dlclose(pEngineSo);
+	CDetourManager::Init(smutils->GetScriptingEngine(), pGameConfig);
+	pDetour = DETOUR_CREATE_MEMBER(ListenEvents, "Signature");
 
-	g_DetourEvents = DETOUR_CREATE_MEMBER(DetourEvents, DetourAEvents);
-	g_DetourEvents->EnableDetour();
+	if (pDetour == nullptr)
+	{
+		smutils->Format(error, maxlen - 1, "Failed to create interceptor");
+		return false;
+	}
+
+	pDetour->EnableDetour();
 
 	sharesys->RegisterLibrary(myself, "SSP_ext");
 	
