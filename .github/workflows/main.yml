@@ -71,7 +71,9 @@ jobs:
         run: |
           cp -r sourcemod_1_10/public/asm sourcemod/public/
           cp -r sourcemod_1_10/public/libudis86 sourcemod/public/
+          # В SM 1.12 добавился safetyhook, нам он не нужен. Достаем старую версию CDetour
           cp -r sourcemod_1_10/public/CDetour sourcemod/public/CDetour_
+          cp -r sourcemod_1_10/public/CDetour sourcemod_1_10/public/CDetour_
 
       - name: Clone detour files (Windows)
         if: runner.os == 'Windows'
@@ -79,6 +81,7 @@ jobs:
           xcopy /E /I /Y sourcemod_1_10\public\asm sourcemod\public\asm
           xcopy /E /I /Y sourcemod_1_10\public\libudis86 sourcemod\public\libudis86
           xcopy /E /I /Y sourcemod_1_10/public/CDetour sourcemod/public/CDetour_
+          xcopy /E /I /Y sourcemod_1_10/public/CDetour sourcemod_1_10/public/CDetour_
 
       - name: Setup MSVC
         if: runner.os == 'Windows'
