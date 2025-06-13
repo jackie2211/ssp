@@ -45,6 +45,8 @@ IForward* g_hDetect;
 CDetour *g_DetourEvents = NULL;
 void *DetourAEvents = NULL;
 
+static void *engine = nullptr;
+
 DETOUR_DECL_MEMBER1(DetourEvents, bool, CLC_ListenEvents*, msg)
 {
 	int client = (reinterpret_cast<CBaseClient*>(this))->GetPlayerSlot() + 1;
@@ -67,10 +69,11 @@ DETOUR_DECL_MEMBER1(DetourEvents, bool, CLC_ListenEvents*, msg)
 
 bool SSP::SDK_OnLoad(char *error, size_t maxlength, bool late)
 {
-	CDetourManager::Init(smutils->GetScriptingEngine());
+	CDetourManager::Init(smutils->GetScriptingEngine(), nullptr);
 	
 	Dl_info info;
 	
+	engine = (void*)smutils->GetEngineFactory()
 	if (dladdr(engine, &info) == 0)
 	{
 		return false;
