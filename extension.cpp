@@ -65,7 +65,8 @@ DETOUR_DECL_MEMBER1(ListenEvents, bool, CLC_ListenEvents*, msg)
 	g_hDetect->Execute(NULL);
 	*/
 	
-	smutils->LogMessage(myself, "[SSP_ext] Hook triggered for client %d with %d events", client, count);
+	const char *name = pClient->GetName();
+	smutils->LogMessage(myself, "[SSP_ext] Hook triggered for client %s (%d) with %d events", name, client, count);
 	
 	return DETOUR_MEMBER_CALL(ListenEvents)(msg);
 }
@@ -98,7 +99,7 @@ bool SSP::SDK_OnLoad(char *error, size_t maxlength, bool late)
 
 void SSP::SDK_OnUnload()
 {
+	g_DetourEvents->DisableDetour();
 	gameconfs->CloseGameConfigFile(pGameConfig);
 	forwards->ReleaseForward(g_hDetect);
-	g_DetourEvents->DisableDetour();
 }
