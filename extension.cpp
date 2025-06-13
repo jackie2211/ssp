@@ -73,7 +73,12 @@ bool SSP::SDK_OnLoad(char *error, size_t maxlength, bool late)
 	
 	Dl_info info;
 	
-	engine = dlopen(nullptr, RTLD_NOW);
+	void *engine = dlopen(nullptr, RTLD_NOW);
+    if (!engine)
+    {
+        snprintf(error, maxlength, "dlopen(nullptr) failed");
+        return false;
+    }
 	
 	if (dladdr(engine, &info) == 0)
 	{
