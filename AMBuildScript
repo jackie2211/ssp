@@ -303,6 +303,7 @@ class ExtensionConfig(object):
       os.path.join(self.sm_root, 'public', 'amtl', 'amtl'),
       os.path.join(self.sm_root, 'public', 'amtl'),
       os.path.join(context.currentSourcePath, 'safetyhook', 'include'),
+      os.path.join(self.sm_root, 'public', 'CDetour', 'detours.cpp'),
     ]
     return compiler
 
