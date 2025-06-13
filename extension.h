@@ -39,7 +39,7 @@
 
 #include "smsdk_ext.h"
 
-#include "CDetour/detours.h"
+#include "CDetour_/detours.h"
 #include "igameevents.h"
 #include "iclient.h"
 #include <bitvec.h>
