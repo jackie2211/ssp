@@ -76,34 +76,26 @@ bool SSP::SDK_OnLoad(char *error, size_t maxlength, bool late)
 	}
 	
 	CDetourManager::Init(smutils->GetScriptingEngine(), pGameConfig);
-	pDetour = DETOUR_CREATE_MEMBER(ListenEvents, "Signature");
+	g_DetourEvents = DETOUR_CREATE_MEMBER(ListenEvents, "Signature");
 
-	if (pDetour == nullptr)
+	if (g_DetourEvents == nullptr)
 	{
 		smutils->Format(error, maxlen - 1, "Failed to create interceptor");
 		return false;
 	}
 
-	pDetour->EnableDetour();
+	g_DetourEvents->EnableDetour();
 
 	sharesys->RegisterLibrary(myself, "SSP_ext");
 	
 	g_hDetect = forwards->CreateForward("SSP_EChecker", ET_Ignore, 2, NULL, Param_Cell, Param_Cell);
-	
-	playerhelpers->AddClientListener(&g_SSP);
 	
 	return true;
 }
 
 void SSP::SDK_OnUnload()
 {
-	if (g_DetourEvents)
-	{
-		g_DetourEvents->Destroy();
-		g_DetourEvents = NULL;
-	}
-	
+	gameconfs->CloseGameConfigFile(pGameConfig);
 	forwards->ReleaseForward(g_hDetect);
-	
-	playerhelpers->RemoveClientListener(&g_SSP);
+	g_DetourEvents->DisableDetour();
 }
