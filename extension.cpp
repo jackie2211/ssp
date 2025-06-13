@@ -44,8 +44,7 @@ IForward* g_hDetect;
 
 CDetour *g_DetourEvents = NULL;
 void *DetourAEvents = NULL;
-
-static void *engine = nullptr;
+IGameConfig* pGameConfig = nullptr;
 
 DETOUR_DECL_MEMBER1(ListenEvents, bool, CLC_ListenEvents*, msg)
 {
@@ -69,9 +68,9 @@ DETOUR_DECL_MEMBER1(ListenEvents, bool, CLC_ListenEvents*, msg)
 
 bool SSP::SDK_OnLoad(char *error, size_t maxlength, bool late)
 {
-	if (!gameconfs->LoadGameConfigFile("SSP.games", &pGameConfig, error, maxlen)) 
+	if (!gameconfs->LoadGameConfigFile("SSP.games", &pGameConfig, error, maxlength)) 
 	{
-		smutils->Format(error, maxlen - 1, "Failed to load gamedata");
+		smutils->Format(error, maxlength - 1, "Failed to load gamedata");
 		return false;
 	}
 	
@@ -80,7 +79,7 @@ bool SSP::SDK_OnLoad(char *error, size_t maxlength, bool late)
 
 	if (g_DetourEvents == nullptr)
 	{
-		smutils->Format(error, maxlen - 1, "Failed to create interceptor");
+		smutils->Format(error, maxlength - 1, "Failed to create interceptor");
 		return false;
 	}
 
