@@ -42,6 +42,7 @@
 #include "CDetour/detours.h"
 #include "igameevents.h"
 #include "iclient.h"
+#include <bitvec.h>
 
 
 class CLC_ListenEvents
