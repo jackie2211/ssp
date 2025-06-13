@@ -69,7 +69,7 @@ DETOUR_DECL_MEMBER1(DetourEvents, bool, CLC_ListenEvents*, msg)
 
 bool SSP::SDK_OnLoad(char *error, size_t maxlength, bool late)
 {
-	CDetourManager::Init(smutils->GetScriptingEngine(), nullptr);
+	CDetourManager::Init(smutils->GetScriptingEngine());
 	
 	Dl_info info;
 	
