@@ -62,6 +62,7 @@ jobs:
           git clone --depth 1 --recursive https://github.com/alliedmodders/sourcemod.git sourcemod
           git clone --depth 1 --recursive --branch 1.10-dev https://github.com/alliedmodders/metamod-source.git metamod_1_10
           git clone --depth 1 --recursive --branch 1.10-dev https://github.com/alliedmodders/sourcemod.git sourcemod_1_10
+          git clone --depth 1 https://github.com/alliedmodders/safetyhook.git safetyhook
           git clone --depth 1 --branch css https://github.com/alliedmodders/hl2sdk.git hl2sdk-css
           git clone --depth 1 --branch episode1 https://github.com/alliedmodders/hl2sdk.git hl2sdk-episode1
 
