@@ -65,7 +65,7 @@ DETOUR_DECL_MEMBER1(DetourEvents, bool, CLC_ListenEvents*, msg)
 	return DETOUR_MEMBER_CALL(DetourEvents)(msg);
 }
 
-bool SD::SDK_OnLoad(char *error, size_t maxlength, bool late)
+bool SSP::SDK_OnLoad(char *error, size_t maxlength, bool late)
 {
 	CDetourManager::Init(smutils->GetScriptingEngine());
 	
@@ -103,7 +103,7 @@ bool SD::SDK_OnLoad(char *error, size_t maxlength, bool late)
 	return true;
 }
 
-void SD::SDK_OnUnload()
+void SSP::SDK_OnUnload()
 {
 	if (g_DetourEvents)
 	{

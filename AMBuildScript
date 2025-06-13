@@ -183,6 +183,7 @@ class ExtensionConfig(object):
       '-msse',
       '-m32',
       '-fvisibility=hidden',
+      '-Wno-unknown-pragmas',
       '-DLINUX',
       '-D_LINUX',
     ]
