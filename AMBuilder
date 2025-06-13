@@ -28,7 +28,8 @@ for sdk_name in Extension.sdks:
   
   binary = Extension.HL2Config(project, projectName + '.ext.' + sdk.ext, sdk)
   binary.sources += [
-    os.path.join(Extension.sm_root, 'public', 'CDetour', 'detours.cpp'),
+    #os.path.join(Extension.sm_root, 'public', 'CDetour', 'detours.cpp'),
+    os.path.join(Extension.sm_root, 'public', 'CDetour_', 'detours.cpp'),
     os.path.join(Extension.sm_root, 'public', 'asm', 'asm.c'),
     os.path.join(Extension.sm_root, 'public', 'libudis86', 'decode.c'),
     os.path.join(Extension.sm_root, 'public', 'libudis86', 'itab.c'),

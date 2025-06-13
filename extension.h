@@ -43,7 +43,7 @@
 #include "igameevents.h"
 #include "iclient.h"
 #include <bitvec.h>
-
+#include <string>
 
 class CLC_ListenEvents
 {
@@ -58,7 +58,7 @@ class CBaseClient : public IGameEventListener2, public IClient {};
  * @brief Sample implementation of the SDK Extension.
  * Note: Uncomment one of the pre-defined virtual functions in order to use it.
  */
-class SSP : public SDKExtension, public IClientListener
+class SSP : public SDKExtension
 {
 public:
 	/**
