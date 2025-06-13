@@ -73,7 +73,8 @@ bool SSP::SDK_OnLoad(char *error, size_t maxlength, bool late)
 	
 	Dl_info info;
 	
-	engine = (void*)smutils->GetEngineFactory()
+	engine = dlopen(nullptr, RTLD_NOW);
+	
 	if (dladdr(engine, &info) == 0)
 	{
 		return false;
