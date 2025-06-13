@@ -171,6 +171,7 @@ class ExtensionConfig(object):
       '_vsnprintf=vsnprintf',
       'HAVE_STDINT_H',
       'GNUC',
+      'HAVE_STRING_H',
     ]
     cxx.cflags += [
       '-pipe',
