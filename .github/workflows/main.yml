@@ -66,6 +66,18 @@ jobs:
           git clone --depth 1 --branch css https://github.com/alliedmodders/hl2sdk.git hl2sdk-css
           git clone --depth 1 --branch episode1 https://github.com/alliedmodders/hl2sdk.git hl2sdk-episode1
 
+      - name: Clone detour files (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          cp -r sourcemod_1_10/public/asm sourcemod/public/
+          cp -r sourcemod_1_10/public/libudis86 sourcemod/public/
+
+      - name: Clone detour files (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          xcopy sourcemod_1_10\public\asm sourcemod\public\asm /E /I /Y
+          xcopy sourcemod_1_10\public\libudis86 sourcemod\public\libudis86 /E /I /Y
+
       - name: Setup MSVC
         if: runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1
