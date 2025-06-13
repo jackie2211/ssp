@@ -71,14 +71,14 @@ jobs:
         run: |
           cp -r sourcemod_1_10/public/asm sourcemod/public/
           cp -r sourcemod_1_10/public/libudis86 sourcemod/public/
-          cp -r sourcemod_1_10/public/cdetour sourcemod/public/cdetour_
+          cp -r sourcemod_1_10/public/CDetour sourcemod/public/CDetour_
 
       - name: Clone detour files (Windows)
         if: runner.os == 'Windows'
         run: |
           xcopy /E /I /Y sourcemod_1_10\public\asm sourcemod\public\asm
           xcopy /E /I /Y sourcemod_1_10\public\libudis86 sourcemod\public\libudis86
-          xcopy /E /I /Y sourcemod_1_10/public/cdetour sourcemod/public/cdetour_
+          xcopy /E /I /Y sourcemod_1_10/public/CDetour sourcemod/public/CDetour_
 
       - name: Setup MSVC
         if: runner.os == 'Windows'
