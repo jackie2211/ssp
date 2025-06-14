@@ -104,7 +104,7 @@ bool SSP::SDK_OnLoad(char *error, size_t maxlength, bool late)
 	}
 	dlclose(pEngineSo);
 	
-	g_DetourEvents = DETOUR_CREATE_MEMBER(DetourEvents, DetourAEvents);
+	g_DetourEvents = DETOUR_CREATE_MEMBER(ListenEvents, DetourAEvents);
 	g_DetourEvents->EnableDetour();
 	
 	g_hDetect = forwards->CreateForward("SSP_EChecker", ET_Ignore, 2, NULL, Param_Cell, Param_Cell);
