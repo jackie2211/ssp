@@ -85,10 +85,14 @@ bool SSP::SDK_OnLoad(char *error, size_t maxlength, bool late)
 	CDetourManager::Init(smutils->GetScriptingEngine(), NULL);
 	
 	Dl_info info;
-	if (dladdr((void *)smutils->GetScriptingEngine(), &info) == 0)
+	void *engineFactory = nullptr;
+	sharesys->GetFactory("engine", &engineFactory);
+	if (!engineFactory || dladdr(engineFactory, &info) == 0)
 	{
 		return false;
 	}
+	
+	smutils->LogMessage(myself, "[SSP_ext] engine library path: %s", info.dli_fname);
 	
 	void *pEngineSo = dlopen(info.dli_fname, RTLD_NOW);
 	if (pEngineSo == NULL)
