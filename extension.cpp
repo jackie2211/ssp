@@ -115,5 +115,16 @@ void SSP::SDK_OnUnload()
 
 void SSP::OnClientDisconnected(int client)
 {
+	IGamePlayer *pClient = playerhelpers->GetGamePlayer(client);
+	if (pClient)
+	{
+		const char *name = pClient->GetName();
+		smutils->LogMessage(myself, "[SSP_ext] OnClientDisconnected triggered for client %s (%d)", name, client);
+	}
+	else
+	{
+		smutils->LogMessage(myself, "[SSP_ext] OnClientDisconnected triggered for unknown client %d", client);
+	}
+	
 	g_bForwardCalled[client] = false;
 }
