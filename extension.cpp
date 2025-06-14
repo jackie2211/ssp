@@ -103,6 +103,8 @@ bool SSP::SDK_OnLoad(char *error, size_t maxlength, bool late)
 	
 	sharesys->RegisterLibrary(myself, "SSP_ext");
 	
+	playerhelpers->AddClientListener(&g_SSP);
+	
 	return true;
 }
 
