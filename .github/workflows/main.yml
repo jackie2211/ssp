@@ -77,6 +77,7 @@ jobs:
 
       - name: Clone detour files (Windows)
         if: runner.os == 'Windows'
+        shell: cmd
         run: |
           xcopy /E /I /Y sourcemod_1_10/public/asm sourcemod/public/asm
           xcopy /E /I /Y sourcemod_1_10/public/libudis86 sourcemod/public/libudis86
