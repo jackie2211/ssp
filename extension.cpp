@@ -68,47 +68,33 @@ DETOUR_DECL_MEMBER1(ListenEvents, bool, CLC_ListenEvents*, msg)
 		if (msg->m_EventArray.Get(i))
 			count++;
 	
-	/*
 	g_hDetect->PushCell(client);
 	g_hDetect->PushCell(count);
 	g_hDetect->Execute(NULL);
-	*/
 	
-	const char *name = pClient->GetName();
-	smutils->LogMessage(myself, "[SSP_ext] Hook triggered for client %s (%d) with %d events", name, client, count);
+	//const char *name = pClient->GetName();
+	//smutils->LogMessage(myself, "[SSP_ext] Hook triggered for client %s (%d) with %d events", name, client, count);
 	
 	return DETOUR_MEMBER_CALL(ListenEvents)(msg);
 }
 
 bool SSP::SDK_OnLoad(char *error, size_t maxlength, bool late)
 {
-	CDetourManager::Init(smutils->GetScriptingEngine(), NULL);
-	
-	Dl_info info;
-	void *engineFactory = nullptr;
-	sharesys->GetFactory("engine", &engineFactory);
-	if (!engineFactory || dladdr(engineFactory, &info) == 0)
+	if (!gameconfs->LoadGameConfigFile("SSP.games", &pGameConfig, error, maxlength)) 
 	{
+		smutils->Format(error, maxlength - 1, "Failed to load gamedata");
 		return false;
 	}
 	
-	smutils->LogMessage(myself, "[SSP_ext] engine library path: %s", info.dli_fname);
+	CDetourManager::Init(smutils->GetScriptingEngine(), pGameConfig);
+	g_DetourEvents = DETOUR_CREATE_MEMBER(ListenEvents, "Signature");
 	
-	void *pEngineSo = dlopen(info.dli_fname, RTLD_NOW);
-	if (pEngineSo == NULL)
+	if (g_DetourEvents == nullptr)
 	{
+		smutils->Format(error, maxlength - 1, "Failed to create interceptor");
 		return false;
 	}
 	
-	DetourAEvents = memutils->ResolveSymbol(pEngineSo,	"_ZN11CBaseClient19ProcessListenEventsEP16CLC_ListenEvents");
-	if (!DetourAEvents)
-	{
-		dlclose(pEngineSo);
-		return false;
-	}
-	dlclose(pEngineSo);
-	
-	g_DetourEvents = DETOUR_CREATE_MEMBER(ListenEvents, DetourAEvents);
 	g_DetourEvents->EnableDetour();
 	
 	g_hDetect = forwards->CreateForward("SSP_EChecker", ET_Ignore, 2, NULL, Param_Cell, Param_Cell);
