@@ -46,9 +46,18 @@ CDetour *g_DetourEvents = NULL;
 void *DetourAEvents = NULL;
 IGameConfig* pGameConfig = nullptr;
 
+bool g_bForwardCalled[SM_MAXPLAYERS + 1] = { false };
+
 DETOUR_DECL_MEMBER1(ListenEvents, bool, CLC_ListenEvents*, msg)
 {
 	int client = (reinterpret_cast<CBaseClient*>(this))->GetPlayerSlot() + 1;
+	
+	if (g_bForwardCalled[client])
+	{
+		return DETOUR_MEMBER_CALL(ListenEvents)(msg);
+	}
+	g_bForwardCalled[client] = true;
+	
 	IGamePlayer *pClient = playerhelpers->GetGamePlayer(client);
 	
 	if (pClient->IsFakeClient()) return DETOUR_MEMBER_CALL(ListenEvents)(msg);
@@ -102,4 +111,9 @@ void SSP::SDK_OnUnload()
 	g_DetourEvents->DisableDetour();
 	gameconfs->CloseGameConfigFile(pGameConfig);
 	forwards->ReleaseForward(g_hDetect);
+}
+
+void SSP::OnClientDisconnected(int client)
+{
+	g_bForwardCalled[client] = false;
 }
