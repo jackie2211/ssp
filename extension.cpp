@@ -61,9 +61,9 @@ DETOUR_DECL_MEMBER1(ListenEvents, bool, CLC_ListenEvents*, msg)
 	IGamePlayer *pClient = playerhelpers->GetGamePlayer(client);
 	
 	if (pClient->IsFakeClient()) return DETOUR_MEMBER_CALL(ListenEvents)(msg);
-
+	
 	int count = 0;
-
+	
 	for (int i = 0; i < MAX_EVENT_NUMBER; i++)
 		if (msg->m_EventArray.Get(i))
 			count++;
@@ -82,21 +82,30 @@ DETOUR_DECL_MEMBER1(ListenEvents, bool, CLC_ListenEvents*, msg)
 
 bool SSP::SDK_OnLoad(char *error, size_t maxlength, bool late)
 {
-	if (!gameconfs->LoadGameConfigFile("SSP.games", &pGameConfig, error, maxlength)) 
+	CDetourManager::Init(smutils->GetScriptingEngine(), NULL);
+	
+	Dl_info info;
+	void *engineFactory = (void *)g_SSP->GetEngineFactory(false);
+	if (dladdr(engineFactory, &info) == 0)
 	{
-		smutils->Format(error, maxlength - 1, "Failed to load gamedata");
 		return false;
 	}
 	
-	CDetourManager::Init(smutils->GetScriptingEngine(), pGameConfig);
-	g_DetourEvents = DETOUR_CREATE_MEMBER(ListenEvents, "Signature");
-
-	if (g_DetourEvents == nullptr)
+	void *pEngineSo = dlopen(info.dli_fname, RTLD_NOW);
+	if (pEngineSo == NULL)
 	{
-		smutils->Format(error, maxlength - 1, "Failed to create interceptor");
 		return false;
 	}
-
+	
+	DetourAEvents = memutils->ResolveSymbol(pEngineSo,	"_ZN11CBaseClient19ProcessListenEventsEP16CLC_ListenEvents");
+	if (!DetourAEvents)
+	{
+		dlclose(pEngineSo);
+		return false;
+	}
+	dlclose(pEngineSo);
+	
+	g_DetourEvents = DETOUR_CREATE_MEMBER(DetourEvents, DetourAEvents);
 	g_DetourEvents->EnableDetour();
 	
 	g_hDetect = forwards->CreateForward("SSP_EChecker", ET_Ignore, 2, NULL, Param_Cell, Param_Cell);
@@ -117,16 +126,5 @@ void SSP::SDK_OnUnload()
 
 void SSP::OnClientDisconnected(int client)
 {
-	IGamePlayer *pClient = playerhelpers->GetGamePlayer(client);
-	if (pClient)
-	{
-		const char *name = pClient->GetName();
-		smutils->LogMessage(myself, "[SSP_ext] OnClientDisconnected triggered for client %s (%d)", name, client);
-	}
-	else
-	{
-		smutils->LogMessage(myself, "[SSP_ext] OnClientDisconnected triggered for unknown client %d", client);
-	}
-	
 	g_bForwardCalled[client] = false;
 }
