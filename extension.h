@@ -132,4 +132,6 @@ public:
 #endif
 };
 
+extern SSP g_hClientListener;
+
 #endif // _INCLUDE_SOURCEMOD_EXTENSION_PROPER_H_

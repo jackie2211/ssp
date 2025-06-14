@@ -101,13 +101,15 @@ bool SSP::SDK_OnLoad(char *error, size_t maxlength, bool late)
 	
 	sharesys->RegisterLibrary(myself, "SSP");
 	
-	playerhelpers->AddClientListener(&g_SSP);
+	playerhelpers->AddClientListener(&g_hClientListener);
 	
 	return true;
 }
 
 void SSP::SDK_OnUnload()
 {
+	playerhelpers->RemoveClientListener(&g_hClientListener);
+	
 	g_DetourEvents->DisableDetour();
 	gameconfs->CloseGameConfigFile(pGameConfig);
 	forwards->ReleaseForward(g_hDetect);
