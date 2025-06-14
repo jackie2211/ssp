@@ -79,10 +79,10 @@ jobs:
         if: runner.os == 'Windows'
         shell: cmd
         run: |
-          xcopy /E /I /Y sourcemod_1_10/public/asm sourcemod/public/asm
-          xcopy /E /I /Y sourcemod_1_10/public/libudis86 sourcemod/public/libudis86
-          xcopy /E /I /Y sourcemod_1_10/public/CDetour sourcemod/public/CDetour_
-          xcopy /E /I /Y sourcemod_1_10/public/CDetour sourcemod_1_10/public/CDetour_
+          xcopy /E /I /Y sourcemod_1_10\public\asm sourcemod\public\asm
+          xcopy /E /I /Y sourcemod_1_10\public\libudis86 sourcemod\public\libudis86
+          xcopy /E /I /Y sourcemod_1_10\public\CDetour sourcemod\public\CDetour_
+          xcopy /E /I /Y sourcemod_1_10\public\CDetour sourcemod_1_10\public\CDetour_
 
       - name: Setup MSVC
         if: runner.os == 'Windows'
