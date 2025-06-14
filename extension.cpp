@@ -85,8 +85,7 @@ bool SSP::SDK_OnLoad(char *error, size_t maxlength, bool late)
 	CDetourManager::Init(smutils->GetScriptingEngine(), NULL);
 	
 	Dl_info info;
-	void *engineFactory = (void *)g_SMAPI->GetEngineFactory(false);
-	if (dladdr(engineFactory, &info) == 0)
+	if (dladdr((void *)smutils->GetScriptingEngine(), &info) == 0)
 	{
 		return false;
 	}
